@@ -20,7 +20,6 @@ var songs = {};
 
 io.on('connection', function (socket) {
   var addedUser = false;
-  console.log('lololol')
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
