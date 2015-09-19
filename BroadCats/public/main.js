@@ -15,6 +15,10 @@ $(function() {
 
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
+  var $btnPush = $('#btnPush'); //The button to queue songs
+  var $urlPush = $('#urlPush'); //The song to push
+  var $btnPull = $('#btnPull'); //The button to request a new song
+  var $player = $('#icivaleplayer') //Ze Playerz
 
   // Prompt for setting a username
   var username;
@@ -24,6 +28,10 @@ $(function() {
   var $currentInput = $usernameInput.focus();
 
   var socket = io();
+    SC.initialize({
+    client_id: "78f553342bdc384279de1c81361be93d",
+    redirect_uri: "http://example.com/callback",
+  });
 
   function addParticipantsMessage (data) {
     var message = '';
@@ -188,13 +196,13 @@ $(function() {
     return COLORS[index];
   }
 
+  function playSong (song) {
+    SC.oEmbed(song, { auto_play: true }, document.getElementById("icivaleplayer"));
+  }
+
   // Keyboard events
 
   $window.keydown(function (event) {
-    // Auto-focus the current input when a key is typed
-    if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-      $currentInput.focus();
-    }
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
       if (username) {
@@ -222,6 +230,15 @@ $(function() {
   $inputMessage.click(function () {
     $inputMessage.focus();
   });
+
+  $btnPush.click(function() {
+    socket.emit('new song', $urlPush.val());
+    $urlPush.val("");
+  })
+
+  $btnPull.click(function() {
+    socket.emit('need song');
+  })
 
   // Socket events
 
@@ -263,4 +280,9 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
+
+  // Whenever the server emits 'play', play the provided song
+  socket.on('play', function (data) {
+    playSong(data);
+  })
 });

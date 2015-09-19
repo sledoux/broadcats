@@ -16,11 +16,11 @@ app.get('/', function(req, res) {
 var usernames = [];
 var numUsers = 0;
 var waitingForSongs = false;
-var songs = {};
+var songs = [];
 
 io.on('connection', function (socket) {
   var addedUser = false;
-  console.log('lololol')
+  
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
@@ -33,21 +33,19 @@ io.on('connection', function (socket) {
   socket.on('new song', function (id)
   {
     //add song to list
-    songs.push(id);
+    console.log('Song added : ' + id);
+    songs.unshift(id);
   });
 
   socket.on('need song', function(){
-
+    console.log('Song requested');
     if(waitingForSongs)
       return;
 
     waitingForSongs = true;
-    while(songs.length == 0)
-    {
-
-    }
     var song = songs.pop();
-    socket.broadcast.emit('play',song);
+    console.log('Sending : ' + song);
+    socket.emit('play', song);
     waitingForSongs = false;
   });
 
