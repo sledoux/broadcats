@@ -20,7 +20,6 @@ var songs = [];
 
 io.on('connection', function (socket) {
   var addedUser = false;
-  
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
@@ -38,13 +37,11 @@ io.on('connection', function (socket) {
   });
 
   socket.on('need song', function(){
-    console.log('Song requested');
     if(waitingForSongs)
       return;
 
     waitingForSongs = true;
     var song = songs.pop();
-    console.log('Sending : ' + song);
     socket.emit('play', song);
     waitingForSongs = false;
   });
