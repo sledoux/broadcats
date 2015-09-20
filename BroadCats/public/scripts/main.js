@@ -197,7 +197,7 @@ $(function() {
   }
 
   function playSong (song) {
-    SC.oEmbed(song, { auto_play: true }, document.getElementById("icivaleplayer"));
+    SC.oEmbed(song, { auto_play: true }, document.getElementById("player"));
   }
 
   // Keyboard events

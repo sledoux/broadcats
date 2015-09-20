@@ -20,6 +20,11 @@ html, input {
     sans-serif;
 }
 
+/* remember to define focus styles! */
+:focus {
+  outline: 0;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -31,18 +36,84 @@ ul {
   word-wrap: break-word;
 }
 
+a{
+  text-decoration:none;
+}
+
 #player {
-    width:350px;
-    float:left;
-    padding:10px;
+    width:100%;
+    margin-bottom:-4px;
+}
+
+#header{
+    background-color: #353535;
+    padding: 0 20px;
+    margin-top: -4px;
+    height: 60px;
+    line-height: 60px;
+    box-sizing: content-box;
+}
+
+#header img.logo{
+    vertical-align: middle;
+    margin: 0 12px 0 0;
+    -ms-transform: rotate(-16deg);
+    -webkit-transform: rotate(-16deg);
+    transform: rotate(-16deg);;
+}
+
+#header input{
+    height: 30px;
+    padding: 0 10px;
+    border: 0;
+    width: 60%;
+    border-left: 1px double #fff;
+}
+
+#header input:active,
+#header input:focus{
+    border: 1px double #f26b43;
+}
+
+#header button,
+#header a.button{
+    height: 30px;
+    border: 0;
+    margin: 0;
+    background-color: #f26b43;
+    color: #FFF1F1;
+    padding: 0px 15px;
+    font-size: 1em;
+    
+}
+#header a.button{
+    vertical-align: middle;
+    line-height: 30px;
+    display: inline-block;
+}
+
+#header a.button:hover,
+#header a.button:active,
+#header a.button:focus,
+#header button:hover, 
+#header button:active,
+#header button:focus{
+    background-color: #FFF1F1;
+    color: #f26b43;
+    cursor: pointer;
 }
 
 #chat {
-    width:350px;
-    float:right;
-    padding:10px;
+    width:100%;
+    flex: 1 1 auto;
+    position: relative;
 }
 
+#container{
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
 /* Pages */
 
 .pages {
@@ -54,7 +125,6 @@ ul {
 
 .page {
   height: 100%;
-  position: absolute;
   width: 100%;
 }
 
@@ -124,8 +194,13 @@ ul {
 /* Messages */
 
 .chatArea {
-  height: 100%;
-  padding-bottom: 60px;
+    padding-bottom: 60px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #F5F5F5;
 }
 
 .messages {
@@ -150,13 +225,15 @@ ul {
 /* Input */
 
 .inputMessage {
-  border: 10px solid #000;
-  bottom: 0;
-  height: 60px;
-  left: 0;
-  outline: none;
-  padding-left: 10px;
-  position: absolute;
-  right: 0;
-  width: 100%;
+    border: 1px solid #353535;
+    border-left-width: 8px;
+    bottom: 0;
+    height: 60px;
+    left: 0;
+    outline: none;
+    padding-left: 10px;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    background-color: #F8F8FF;
 }

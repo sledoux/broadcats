@@ -2,8 +2,10 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var favicon = require('serve-favicon');
 
 //Set our static file directory to public
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {

@@ -4,38 +4,38 @@
   <meta charset="UTF-8">
   <title>BroadCats</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
-</head>
-<body>
-  <div id="chat">
-  <ul class="pages">
-    <li class="chat page">
-      <div class="chatArea">
-        <ul class="messages"></ul>
-      </div>
-      <input class="inputMessage" placeholder="Type here..."/>
-    </li>
-    <li class="login page">
-      <div class="form">
-        <h3 class="title">What's your nickname?</h3>
-        <input class="usernameInput" type="text" maxlength="14" />
-      </div>
-    </li>
-  </ul>
-</div>
-<div id="player">
-  <div id="icivaleplayer"/>
-</div>
-<div>
-  <button id="btnPush">Push song</button>
-  <input id="urlPush" type="text"/>
-  <br/>
-
-  <button id="btnPull">Play next song</button>
-  <br/>
-<div>
+  
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/scripts/main.js"></script>
   <script src="//connect.soundcloud.com/sdk-2.0.0.js"></script>
+  
+</head>
+<body>
+  <div class="login page">
+    <div class="form">
+      <h3 class="title">What's your nickname?</h3>
+      <input class="usernameInput" type="text" maxlength="14" />
+    </div>
+  </div>
+  
+  <div id="container">
+    <div id="header">
+      <img src="/images/Cat_36.png" alt="logo" class="logo" />
+      
+      <a href="#" class="button" id="btnPush">Push song</a>
+      <input id="urlPush" type="text" value="https://soundcloud.com/lovebirds/lovebirds-the-path-original"/>
+      <a href="#" class="button" id="btnPull">Play next song</a>
+    </div>
+
+    <div id="player"></div>
+
+    <div id="chat">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+      <input class="inputMessage" placeholder="Type here..."/>
+    </div>
+  </div>
 </body>
 </html>
