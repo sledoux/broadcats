@@ -22,10 +22,10 @@
   <div id="container">
     <div id="header">
       <img src="/images/Cat_36.png" alt="logo" class="logo" />
-      
-      <a href="#" class="button" id="btnPush">Push song</a>
-      <input id="urlPush" type="text" value="https://soundcloud.com/lovebirds/lovebirds-the-path-original"/>
-      <a href="#" class="button" id="btnPull">Play next song</a>
+            
+      <input id="urlPush" type="text" value="https://soundcloud.com/lovebirds/lovebirds-the-path-original" placeholder="Enter your song URL..."/>
+      <button class="button" id="btnPush" type="submit">Queue</a>
+      <button class="button" id="btnPull" type="button">Start broadcast</a>
     </div>
 
     <div id="player"></div>
@@ -34,7 +34,7 @@
       <div class="chatArea">
         <ul class="messages"></ul>
       </div>
-      <input class="inputMessage" placeholder="Type here..."/>
+      <input id="newMessage" class="inputMessage" placeholder="Type here..."/>
     </div>
   </div>
 </body>

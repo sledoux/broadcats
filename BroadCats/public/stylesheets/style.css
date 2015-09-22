@@ -79,15 +79,14 @@ a{
 #header a.button{
     height: 30px;
     border: 0;
-    margin: 0;
+    margin: 0 10px;
     background-color: #f26b43;
     color: #FFF1F1;
     padding: 0px 15px;
     font-size: 1em;
-    
+    vertical-align: middle;
 }
 #header a.button{
-    vertical-align: middle;
     line-height: 30px;
     display: inline-block;
 }
@@ -101,6 +100,10 @@ a{
     background-color: #FFF1F1;
     color: #f26b43;
     cursor: pointer;
+}
+
+#header #btnPush{
+    margin-left: -4px;   
 }
 
 #chat {
@@ -236,4 +239,15 @@ a{
     right: 0;
     width: 100%;
     background-color: #F8F8FF;
+}
+
+@media only screen and (max-width: 480px), only screen and (max-device-width: 480px) {
+  html{
+      zoom: 2;
+  }
+  
+  .inputMessage {
+    border-left-width: 0px;
+    border-right-width: 0px;
+  }
 }
