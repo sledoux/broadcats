@@ -44,7 +44,7 @@ io.on('connection', function (socket) {
 
     waitingForSongs = true;
     var song = songs.pop();
-    socket.emit('play', song);
+    io.sockets.emit('play', song);
     waitingForSongs = false;
   });
 
