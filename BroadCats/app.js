@@ -19,6 +19,8 @@ var usernames = [];
 var numUsers = 0;
 var waitingForSongs = false;
 var songs = [];
+var lastSong = {songUrl : "",
+                timeStarted : new Date().getTime()}
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -35,16 +37,18 @@ io.on('connection', function (socket) {
   {
     //add song to list
     console.log('Song added : ' + id);
-    songs.unshift(id);
+    songs.push(id);
   });
 
   socket.on('need song', function(){
     if(waitingForSongs)
       return;
-
+    console.log("need song");
     waitingForSongs = true;
     var song = songs.pop();
-    io.sockets.emit('play', song);
+    io.emit('play', {url: song, startTime : 0});
+    lastSong = {songUrl : song,
+                    timeStarted : new Date().getTime()}
     waitingForSongs = false;
   });
 
@@ -64,6 +68,16 @@ io.on('connection', function (socket) {
       username: socket.username,
       numUsers: numUsers
     });
+
+    //send him the song
+    console.log("New User!");
+    if(lastSong.songUrl != "")
+    {
+      var now = new Date().getTime();
+      var diff = now - lastSong.timeStarted;
+      socket.emit("play",{url: lastSong.songUrl, startTime : diff});
+    }
+
   });
 
   // when the client emits 'typing', we broadcast it to others
