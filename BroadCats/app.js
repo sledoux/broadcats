@@ -37,7 +37,7 @@ io.on('connection', function (socket) {
   {
     //add song to list
     console.log('Song added : ' + id);
-    songs.unshift(id);
+    songs.push(id);
   });
 
   socket.on('need song', function(){
@@ -46,10 +46,9 @@ io.on('connection', function (socket) {
     console.log("need song");
     waitingForSongs = true;
     var song = songs.pop();
-    socket.emit('play', {url: song, startTime : 0});
+    io.emit('play', {url: song, startTime : 0});
     lastSong = {songUrl : song,
                     timeStarted : new Date().getTime()}
-    console.log(lastSong);
     waitingForSongs = false;
   });
 
