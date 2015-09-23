@@ -184,6 +184,18 @@ $(function() {
     });
   }
 
+  function isSongValid(id) {
+    var isDef = SC.get('/resolve', { url: id }, function(track) {
+      return track.id;
+    });
+    if (isDef != undefined) {
+      return true;
+    } 
+    else if (isDef == undefined) {
+      return false;
+    }
+  }
+
   // Gets the color of a username through our hash function
   function getUsernameColor (username) {
     // Compute hash code
@@ -232,7 +244,13 @@ $(function() {
   });
 
   $btnPush.click(function() {
-    socket.emit('new song', $urlPush.val());
+    if(isSongValid($urlPush.val())) {
+      socket.emit('new song', $urlPush.val());
+    }
+    else {
+      var message = "Invalid song : " + $urlPush.val();
+      log(message);
+    }
     $urlPush.val("");
   })
 
