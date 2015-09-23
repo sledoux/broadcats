@@ -1,3 +1,14 @@
+if (!String.prototype.supplant) {
+    String.prototype.supplant = function (o) {
+        return this.replace(/{([^{}]*)}/g,
+            function (a, b) {
+                var r = o[b];
+                return typeof r === 'string' || typeof r === 'number' ? r : a;
+            }
+        );
+    };
+}
+
 $(function() {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
@@ -26,6 +37,11 @@ $(function() {
   var typing = false;
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
+
+  var clientId = "78f553342bdc384279de1c81361be93d";
+  var templateIframe = '<iframe id="sc-player" width="100%" height="166" scrolling="no" ' +
+                 'frameborder="no" src="http://w.soundcloud.com/play' +
+                 'er/?url={url}{options}" class="sc-widget"></iframe>'
 
   var socket = io();
     SC.initialize({
@@ -196,8 +212,33 @@ $(function() {
     return COLORS[index];
   }
 
-  function playSong (song) {
-    SC.oEmbed(song, { auto_play: true }, document.getElementById("player"));
+  /*function playSong (song) {
+    var sound  = SC.oEmbed(song.url, { auto_play: true }, document.getElementById("player"));
+    sound.setPosition(song.startTime)
+  }*/
+
+  function playSong(song)
+  {
+    console.log(song);
+    $.getJSON(
+    'http://api.soundcloud.com/resolve.json?url=' + song.url +
+    '&client_id=' + clientId
+  ).done(function ( soundData ) {
+    $('#player').html(templateIframe.supplant({
+      url: soundData.uri,
+      options: '&autoplay=true'
+    }));
+    var widget = SC.Widget($('body').find('iframe')[0]);
+    widget.bind('ready', function () {
+      console.log('widget ready');
+      widget.play();
+      widget.bind(SC.Widget.Events.PLAY, function ()
+          {
+            widget.seekTo(song.startTime);
+          });
+      widget.bind(SC.Widget.Events.FINISH, function () {socket.emit('need song');})
+    });
+  });
   }
 
   // Keyboard events
