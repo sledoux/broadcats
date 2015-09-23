@@ -280,7 +280,7 @@ function isSongValid(id, callback) {
 
 $btnPush.click(function() {
   isSongValid($urlPush.val(), function(exists) {
-    if (err) {
+    if (!exists) {
       const message = `Invalid song : ${$urlPush.val()}`;
       log(message);
     } else {  
