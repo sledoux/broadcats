@@ -30,6 +30,8 @@ $(function() {
   var $urlPush = $('#urlPush'); //The song to push
   var $btnPull = $('#btnPull'); //The button to request a new song
   var $player = $('#icivaleplayer') //Ze Playerz
+  $('#yt-player').hide();
+  $('#sc-player').hide();
 
   // Prompt for setting a username
   var username;
@@ -39,9 +41,11 @@ $(function() {
   var $currentInput = $usernameInput.focus();
 
   var clientId = "78f553342bdc384279de1c81361be93d";
-  var templateIframe = '<iframe id="sc-player" width="100%" height="166" scrolling="no" ' +
+  var templateIframe = '<iframe id="sc-playerIFrame" width="100%" height="166" scrolling="no" ' +
                  'frameborder="no" src="http://w.soundcloud.com/play' +
-                 'er/?url={url}{options}" class="sc-widget"></iframe>'
+                 'er/?url={url}{options}" class="sc-widget"></iframe>';
+  var templateIFrameYoutube = '<iframe id="yt-player" type="text/html" width="640" height="390"'+
+                              'frameborder="0"></iframe>';
 
   var socket = io();
     SC.initialize({
@@ -231,16 +235,102 @@ $(function() {
 
   function playSong(song)
   {
+    if(song.url.indexOf("youtube") > -1)
+    {
+      playSongYoutube(song);
+      $('#sc-player').hide();
+      $('#yt-player').show();
+    }
+    else {
+      playSongSC(song);
+      $('#yt-player').hide();
+      $('#sc-player').show();
+    }
+  }
+
+  var player;//Youtube player
+  function playSongYoutube(song)
+  {
+    console.log("playSongYoutube");
+
+    if(typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined')
+    {
+      console.log("YT undefined! need to load it")
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+    else {
+        if(typeof(player) == 'undefined')
+        {
+          onYouTubeIframeAPIReady(); //Went to soundcloud
+        }
+        else {
+          player.loadVideoById(getYoutubeId(song.url), song.startTime / 1000, "large");
+        }
+
+    }
+
+
+    function onPlayerReady(event) {
+      console.log("player ready!");
+       event.target.setVolume(100);
+        event.target.playVideo();
+      }
+
+    function onPlayerStateChange (event)
+    {
+      if (event.data == YT.PlayerState.ENDED) {
+          console.log("ended!")
+          socket.emit('need song');
+        }
+    }
+
+
+
+    window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {
+     console.log("YT ready!")
+     player = new YT.Player('yt-player', {
+        height: '390',
+        width: '640',
+        videoId: getYoutubeId(song.url),
+        //playerVars: {'controls': 0 }, //Cant pause, etc
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+        });}
+
+
+  }
+
+  function getYoutubeId(url)
+  {
+    var video_id = url.split('v=')[1];
+    var ampersandPosition = video_id.indexOf('&');
+    if(ampersandPosition != -1) {
+      video_id = video_id.substring(0, ampersandPosition);
+    }
+    return video_id;
+  }
+
+
+
+
+  function playSongSC(song)
+  {
     console.log(song);
     $.getJSON(
     'http://api.soundcloud.com/resolve.json?url=' + song.url +
     '&client_id=' + clientId
   ).done(function ( soundData ) {
-    $('#player').html(templateIframe.supplant({
+    $('#sc-player').html(templateIframe.supplant({
       url: soundData.uri,
       options: '&autoplay=true'
     }));
-    var widget = SC.Widget($('body').find('iframe')[0]);
+    var widget = SC.Widget("sc-playerIFrame");
     widget.bind('ready', function () {
       console.log('widget ready');
       widget.play();
@@ -252,6 +342,7 @@ $(function() {
     });
   });
   }
+
 
   // Keyboard events
 
