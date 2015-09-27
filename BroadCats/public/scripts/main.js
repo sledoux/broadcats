@@ -205,6 +205,11 @@ $(function() {
   }
 
 function isSongValid(id, callback) {
+  if(id.indexOf("youtube") > -1)
+  {
+    callback(true);
+    return;
+  }
   SC.get("/resolve", {url: id}, (track) => {
     callback(!!(track && track.id));
   });
@@ -374,10 +379,10 @@ $btnPush.click(function() {
     if (!exists) {
       const message = `Invalid song : ${$urlPush.val()}`;
       log(message);
-    } else {  
+    } else {
       socket.emit('new song', $urlPush.val());
     }
- 
+
     $urlPush.val("");
   });
 })

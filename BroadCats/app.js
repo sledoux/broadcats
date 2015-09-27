@@ -37,19 +37,23 @@ io.on('connection', function (socket) {
   {
     //add song to list
     console.log('Song added : ' + id);
-    songs.push(id);
+    songs.unshift(id);
   });
 
   socket.on('need song', function(){
     if(waitingForSongs)
+    {
+      console.log("Need song is denied because we already sent a song");
       return;
+    }
     console.log("need song");
     waitingForSongs = true;
     var song = songs.pop();
     io.emit('play', {url: song, startTime : 0});
     lastSong = {songUrl : song,
-                    timeStarted : new Date().getTime()}
-    waitingForSongs = false;
+                    timeStarted : new Date().getTime()};
+    setTimeout(function(){
+    waitingForSongs = false;},3000);
   });
 
   // when the client emits 'add user', this listens and executes
